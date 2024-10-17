@@ -1,22 +1,31 @@
 package controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import model.Demo;
+import service.DemoService;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/demo")
 public class DemoController {
 
-    //("/") + ("/hello")
-    @GetMapping("/hello")
-    public String getHello(@RequestParam String str) {
-        return str;
+    private final DemoService demoService;
+
+    public DemoController(DemoService demoService) {
+        this.demoService = demoService;
     }
 
-    @PostMapping
-    public Demo setValue(@RequestBody Demo demo) {
-        demo.setNumber(demo.getNumber() + 1);
-        return demo;
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('read')")
+    public List<Demo> findAll() {
+        return demoService.findAll();
     }
 
+    @PostMapping("/save")
+    @PreAuthorize("hasAnyAuthority('modification')")
+    public void save(@RequestBody Demo demo) {
+        demoService.save(demo);
+    }
 }

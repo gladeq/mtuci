@@ -1,0 +1,15 @@
+spring:
+application:
+  name: rbpomtuci
+datasource:
+  url: jdbc:postgresql://localhost:8080/postgres
+  username: ${JDBC_USER}
+  password: ${JDBC_PASSWORD}
+jpa:
+  hibernate:
+    ddl-auto: create
+  show-sql: true
+
+jwt:
+  secret: ${TOKEN}
+  expiration: ${EXPIRATION}

@@ -1,30 +1,42 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+
+@Entity
+@Table(name = "demo")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Demo {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "number")
     private int number;
 
-    public Demo() {
-    }
+    @OneToMany(mappedBy = "demo")
+    @JsonIgnoreProperties("demo")
+    private List<Details> details;
 
-    public Demo(String name, int number) {
-        this.name = name;
-        this.number = number;
-    }
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "demo_info",
+            joinColumns = @JoinColumn(name = "demo_id"),
+            inverseJoinColumns = @JoinColumn(name = "info_id")
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
+    )
+    private List<Info> infos;
 }
