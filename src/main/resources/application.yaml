@@ -7,9 +7,9 @@ datasource:
   password: ${JDBC_PASSWORD}
 jpa:
   hibernate:
-    ddl-auto: create
+    ddl-auto: update
   show-sql: true
 
 jwt:
-  secret: ${TOKEN}
-  expiration: ${EXPIRATION}
+  secret: ${TOKEN} //VoronkinNikitaAlekseevich1BIB22009
+  expiration: ${EXPIRATION} //360000
