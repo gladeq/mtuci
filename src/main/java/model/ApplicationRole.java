@@ -24,4 +24,5 @@ public enum ApplicationRole {
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + name()));
         return grantedAuthorities;
     }
+
 }

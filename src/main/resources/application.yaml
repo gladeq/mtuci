@@ -1,15 +1,17 @@
+server:
+  port: 8082
 spring:
-application:
+ application:
   name: rbpomtuci
-datasource:
+ datasource:
   url: jdbc:postgresql://localhost:8080/postgres
   username: ${JDBC_USER}
   password: ${JDBC_PASSWORD}
-jpa:
+ jpa:
   hibernate:
     ddl-auto: update
   show-sql: true
 
-jwt:
+ jwt:
   secret: ${TOKEN} //VoronkinNikitaAlekseevich1BIB22009
   expiration: ${EXPIRATION} //360000

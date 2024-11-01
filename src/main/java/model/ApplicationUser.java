@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -26,4 +27,7 @@ public class ApplicationUser {
 
     @Enumerated(EnumType.STRING)
     private ApplicationRole role;
+
+    public void setRoles(Set<ApplicationRole> singleton) {
+    }
 }

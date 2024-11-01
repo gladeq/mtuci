@@ -1,22 +1,29 @@
 package configuration;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
+
+    private final UserDetailsService userDetailsService;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -29,55 +36,63 @@ public class JwtTokenProvider {
     }
 
     //TODO: реализовать методы создания, валидации и получения информации из JWT токена
-
     public String createToken(String username, Set<GrantedAuthority> authorities) {
         Claims claims = Jwts.claims().setSubject(username);
-        // Correctly collect authorities
-        claims.put("authorities", authorities.stream()
+        claims.put("auth", authorities.stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList())
+        );
 
         Date now = new Date();
-        Date validity = new Date(now.getTime() + expiration * 1000);
+        Date expiationDate = new Date(now.getTime() + expiration);
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(validity)
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .setExpiration(expiationDate)
+                .signWith(getSigningKey())
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token);
+
             return true;
-        } catch (SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
-            // More specific exception handling for better diagnostics
-            System.err.println("Invalid JWT token: " + e.getMessage());
+        } catch (Exception e) {
             return false;
         }
+
     }
 
     public String getUsername(String token) {
-        Claims claims = parseClaims(token);
-        return claims.getSubject();
+        System.out.println(getAuthorities(token));
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+
     }
 
     public Set<GrantedAuthority> getAuthorities(String token) {
-        Claims claims = parseClaims(token);
-        return ((List<String>) claims.get("authorities")).stream()
-                .map(SimpleGrantedAuthority::new)
+        return ((Collection<?>) Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("auth", Collection.class)).stream()
+                .map(authority -> new SimpleGrantedAuthority((String) authority))
                 .collect(Collectors.toSet());
     }
 
-
-    // Helper method to parse the token and handle potential exceptions.
-    private Claims parseClaims(String token) {
-        try {
-            return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
-        } catch (SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
-            throw new RuntimeException("JWT token is invalid", e); // Re-throw as RuntimeException
-        }
+    public Authentication getAuthentication(String token) {
+        String username = getUsername(token);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }
