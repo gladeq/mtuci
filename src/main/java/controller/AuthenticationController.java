@@ -32,12 +32,12 @@ public class AuthenticationController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private UserDetailsServiceImpl userService;
+    private UserDetailsServiceImpl UserDetailsServiceImpl;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody ApplicationUser user) {
         try {
-            ApplicationUser registeredUser = userService.registerUser(user);
+            ApplicationUser registeredUser = UserDetailsServiceImpl.registerUser(user);
             return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
         } catch (RuntimeException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);

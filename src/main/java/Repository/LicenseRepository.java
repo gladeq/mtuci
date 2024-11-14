@@ -8,7 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface LicenseRepository extends JpaRepository<License, Long> {
     License findByDeviceId(String deviceId);
 
-    static License findByUserIdAndDeviceId(Long userId, String deviceId) {
-        return null;
-    }
+    License findByUser_Id(Long userId);
 }

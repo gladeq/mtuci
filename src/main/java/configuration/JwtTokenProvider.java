@@ -1,7 +1,6 @@
 package configuration;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +34,6 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    //TODO: реализовать методы создания, валидации и получения информации из JWT токена
     public String createToken(String username, Set<GrantedAuthority> authorities) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("auth", authorities.stream()
@@ -44,48 +42,40 @@ public class JwtTokenProvider {
         );
 
         Date now = new Date();
-        Date expiationDate = new Date(now.getTime() + expiration);
+        Date expirationDate = new Date(now.getTime() + expiration); // Исправлена опечатка
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(expiationDate)
+                .setExpiration(expirationDate)
                 .signWith(getSigningKey())
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token);
-
+            parseToken(token);
             return true;
-        } catch (Exception e) {
-            return false;
+        } catch (ExpiredJwtException e) {
+            // Обработка просроченного токена
+        } catch (MalformedJwtException e) {
+            // Обработка некорректного токена
+        } catch (UnsupportedJwtException e) {
+            // Обработка неподдерживаемого токена
+        } catch (SignatureException e) {
+            // Обработка неверной подписи
+        } catch (IllegalArgumentException e) {
+            // Обработка пустого или невалидного аргумента
         }
-
+        return false;
     }
 
     public String getUsername(String token) {
-        System.out.println(getAuthorities(token));
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-
+        return parseToken(token).getBody().getSubject();
     }
 
     public Set<GrantedAuthority> getAuthorities(String token) {
-        return ((Collection<?>) Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("auth", Collection.class)).stream()
+        return ((Collection<?>) parseToken(token).getBody().get("auth", Collection.class)).stream()
                 .map(authority -> new SimpleGrantedAuthority((String) authority))
                 .collect(Collectors.toSet());
     }
@@ -94,5 +84,12 @@ public class JwtTokenProvider {
         String username = getUsername(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    private Jws<Claims> parseToken(String token) { // Вынесена логика парсинга
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token);
     }
 }
