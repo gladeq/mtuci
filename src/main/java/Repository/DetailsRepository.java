@@ -6,4 +6,5 @@ import model.Details;
 
 @Repository
 public interface DetailsRepository extends JpaRepository<Details, Long> {
+
 }

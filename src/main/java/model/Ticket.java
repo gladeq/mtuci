@@ -11,16 +11,16 @@ import java.util.Base64;
 
 public class Ticket {
 
-    private Instant serverTime;
-    private long ticketLifetime; // in seconds
-    private LocalDate licenseActivationDate;
-    private LocalDate licenseExpirationDate;
-    private Long userId;
-    private String deviceId;
-    private boolean isLicenseBlocked;
+    private final Instant serverTime;
+    private final long ticketLifetime; // in seconds
+    private final LocalDate licenseActivationDate;
+    private final LocalDate licenseExpirationDate;
+    private final Long userId;
+    private final String deviceId;
+    private final boolean isLicenseBlocked;
     private String signature;
 
-    // Конструктор
+
     public Ticket(LocalDate licenseActivationDate, LocalDate licenseExpirationDate, Long userId, String deviceId, boolean isLicenseBlocked) {
         this.serverTime = Instant.now();
         this.ticketLifetime = 300; // 5 minutes default
@@ -31,7 +31,7 @@ public class Ticket {
         this.isLicenseBlocked = isLicenseBlocked;
     }
 
-    // Метод для генерации подписи
+
     public void generateSignature(PrivateKey privateKey) throws SignatureException, InvalidKeyException {
         String data = this.toString(); // Строка для подписи
         Signature rsa = null; // Или другой алгоритм
@@ -46,7 +46,7 @@ public class Ticket {
         this.signature = Base64.getEncoder().encodeToString(signatureBytes);
     }
 
-     //Метод для проверки подписи
+
     public boolean verifySignature(PublicKey publicKey) throws SignatureException, InvalidKeyException {
         String data = this.toString(); // Строка для проверки
         Signature rsa = null; // Должен совпадать с алгоритмом подписи
