@@ -9,9 +9,9 @@ spring:
   password: ${JDBC_PASSWORD}
  jpa:
   hibernate:
-    ddl-auto: update
+   ddl-auto: update
   show-sql: true
 
- jwt:
-  secret: ${TOKEN} //VoronkinNikitaAlekseevich1BIB22009
-  expiration: ${EXPIRATION} //360000
+jwt:
+ secret: VoronkinNikitaAlekseevich1BIB22009
+ expiration: 3600000
