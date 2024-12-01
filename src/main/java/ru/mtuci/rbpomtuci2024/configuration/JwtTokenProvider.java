@@ -34,17 +34,19 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    private long validityInMilliseconds = expiration * 1000;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String createToken(String username, String role) {
+    public String createToken(String username, Set<GrantedAuthority> role) {
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put("role", role);
+        claims.put("role", role.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
 
         Date now = new Date();
+        long validityInMilliseconds = expiration * 1000;
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
@@ -63,7 +65,6 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-
             log.error("Invalid JWT token: {}", e.getMessage());
             return false;
         }

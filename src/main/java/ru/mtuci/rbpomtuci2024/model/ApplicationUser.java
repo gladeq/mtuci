@@ -20,5 +20,7 @@ public class ApplicationUser {
     private String login;
     private String password_hash;
     private String email;
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private ApplicationRole role;
 }

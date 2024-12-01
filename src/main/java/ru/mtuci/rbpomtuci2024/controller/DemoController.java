@@ -17,7 +17,6 @@ public class DemoController {
         this.demoService = demoService;
     }
 
-
     @GetMapping
     @PreAuthorize("hasAnyAuthority('read')")
     public List<Demo> findAll() {
@@ -25,7 +24,8 @@ public class DemoController {
     }
 
     @PostMapping("/save")
-    @PreAuthorize("hasAnyAuthority('modification')")
+    //@PreAuthorize("hasAnyAuthority('`modification`')")
+    @PreAuthorize("hasAnyRole('USER')")
     public void save(@RequestBody Demo demo) {
         demoService.save(demo);
     }

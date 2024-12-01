@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mtuci.rbpomtuci2024.configuration.JwtTokenProvider;
 import ru.mtuci.rbpomtuci2024.model.ApplicationUser;
+import ru.mtuci.rbpomtuci2024.model.ApplicationRole;
 import ru.mtuci.rbpomtuci2024.model.AuthenticationRequest;
 import ru.mtuci.rbpomtuci2024.model.AuthenticationResponse;
 import ru.mtuci.rbpomtuci2024.Repository.UserRepository;
@@ -42,7 +43,7 @@ public class AuthenticationController {
                     new UsernamePasswordAuthenticationToken(login, request.getPassword())
             );
 
-            String token = jwtTokenProvider.createToken(login, user.getRole());
+            String token = jwtTokenProvider.createToken(login, user.getRole().getGrantedAuthorities());
 
             return ResponseEntity.ok(new AuthenticationResponse(login, token));
         } catch (AuthenticationException ex) {
@@ -64,7 +65,7 @@ public class AuthenticationController {
         user.setEmail(request.getEmail());
         user.setLogin(request.getLogin());
         user.setPassword_hash(passwordEncoder.encode(request.getPassword()));
-        user.setRole("ROLE_USER");
+        user.setRole(ApplicationRole.USER);
 
 
 
