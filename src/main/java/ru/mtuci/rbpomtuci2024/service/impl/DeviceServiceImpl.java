@@ -1,4 +1,4 @@
-package ru.mtuci.rbpomtuci2024.service;
+package ru.mtuci.rbpomtuci2024.service.impl;
 
 import ru.mtuci.rbpomtuci2024.Repository.DeviceRepository;
 import ru.mtuci.rbpomtuci2024.model.Device;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class DeviceService {
+public class DeviceServiceImpl {
 
     private final DeviceRepository deviceRepository;
 
@@ -38,3 +38,4 @@ public class DeviceService {
         deviceRepository.deleteById(id);
     }
 }
+

@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mtuci.rbpomtuci2024.model.Device;
-import ru.mtuci.rbpomtuci2024.service.DeviceService;
+import ru.mtuci.rbpomtuci2024.service.impl.DeviceServiceImpl;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeviceController {
 
-    private final DeviceService deviceService;
+    private final DeviceServiceImpl deviceService;
 
     @GetMapping
     public ResponseEntity<List<Device>> getAllDevices() {

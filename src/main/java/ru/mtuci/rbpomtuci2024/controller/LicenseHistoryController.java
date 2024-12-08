@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mtuci.rbpomtuci2024.model.LicenseHistory;
-import ru.mtuci.rbpomtuci2024.service.LicenseHistoryService;
+import ru.mtuci.rbpomtuci2024.service.impl.LicenseHistoryServiceImpl;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LicenseHistoryController {
 
-    private final LicenseHistoryService licenseHistoryService;
+    private final LicenseHistoryServiceImpl licenseHistoryService;
 
     @GetMapping
     public ResponseEntity<List<LicenseHistory>> getAllLicenseHistories() {

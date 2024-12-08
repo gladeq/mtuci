@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mtuci.rbpomtuci2024.model.DeviceLicense;
-import ru.mtuci.rbpomtuci2024.service.DeviceLicenseService;
+import ru.mtuci.rbpomtuci2024.service.impl.DeviceLicenseServiceImpl;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeviceLicenseController {
 
-    private final DeviceLicenseService deviceLicenseService;
+    private final DeviceLicenseServiceImpl deviceLicenseService;
 
     @GetMapping
     public ResponseEntity<List<DeviceLicense>> getAllDeviceLicenses() {

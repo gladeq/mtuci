@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mtuci.rbpomtuci2024.model.Product;
-import ru.mtuci.rbpomtuci2024.service.ProductService;
+import ru.mtuci.rbpomtuci2024.service.impl.ProductServiceImpl;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductServiceImpl productService;
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {

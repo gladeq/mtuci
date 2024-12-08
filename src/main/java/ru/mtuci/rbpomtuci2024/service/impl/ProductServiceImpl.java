@@ -1,4 +1,4 @@
-package ru.mtuci.rbpomtuci2024.service;
+package ru.mtuci.rbpomtuci2024.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService {
+public class ProductServiceImpl {
 
     private final ProductRepository productRepository;
 

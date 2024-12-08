@@ -7,15 +7,16 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Setter
 @Getter
 @Entity
 public class License {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "license_id_seq")
+    @SequenceGenerator(name = "license_id_seq", sequenceName = "license_id_seq", allocationSize = 1)
     private Long id;
-    private String code;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -46,5 +47,8 @@ public class License {
 
     @OneToMany(mappedBy = "license")
     private List<LicenseHistory> licenseHistoryEntries;
-    
+
+    @Column(nullable = false, unique = true)
+    private String code;
+
 }

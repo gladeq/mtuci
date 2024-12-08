@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mtuci.rbpomtuci2024.model.LicenseType;
-import ru.mtuci.rbpomtuci2024.service.LicenseTypeService;
+import ru.mtuci.rbpomtuci2024.service.impl.LicenseTypeServiceImpl;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LicenseTypeController {
 
-    private final LicenseTypeService licenseTypeService;
+    private final LicenseTypeServiceImpl licenseTypeService;
 
     @GetMapping
     public ResponseEntity<List<LicenseType>> getAllLicenseTypes() {
