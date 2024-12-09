@@ -3,6 +3,8 @@ package ru.mtuci.rbpomtuci2024.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -23,11 +25,13 @@ public class License {
     private ApplicationUser user;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "type_id")
+    @JoinColumn(name = "type_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private LicenseType type;
 
     private Date firstActivationDate;
@@ -50,5 +54,7 @@ public class License {
 
     @Column(nullable = false, unique = true)
     private String code;
+
+    private boolean activated;
 
 }

@@ -2,7 +2,9 @@ package ru.mtuci.rbpomtuci2024.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.mtuci.rbpomtuci2024.Repository.LicenseRepository;
 import ru.mtuci.rbpomtuci2024.Repository.LicenseTypeRepository;
+import ru.mtuci.rbpomtuci2024.model.License;
 import ru.mtuci.rbpomtuci2024.model.LicenseType;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
 public class LicenseTypeServiceImpl {
 
     private final LicenseTypeRepository licenseTypeRepository;
+    private final LicenseRepository licenseRepository;
 
     public List<LicenseType> getAllLicenseTypes() {
         return licenseTypeRepository.findAll();
@@ -23,6 +26,10 @@ public class LicenseTypeServiceImpl {
     }
 
     public LicenseType createLicenseType(LicenseType licenseType) {
+        // Проверка уникальности ID
+        if (licenseTypeRepository.existsById(licenseType.getId())) {
+            throw new IllegalArgumentException("License type with ID " + licenseType.getId() + " already exists");
+        }
         return licenseTypeRepository.save(licenseType);
     }
 
@@ -35,6 +42,10 @@ public class LicenseTypeServiceImpl {
     }
 
     public void deleteLicenseType(Long id) {
+        List<License> licenses = licenseRepository.findByTypeId(id);
+        if (!licenses.isEmpty()) {
+            licenseRepository.deleteAll(licenses);
+        }
         licenseTypeRepository.deleteById(id);
     }
 }

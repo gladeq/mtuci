@@ -15,3 +15,6 @@ spring:
 jwt:
  secret: VoronkinNikitaAlekseevich1BIB22009
  expiration: 3600000
+
+security:
+ secret-key: "secretkey"

@@ -6,15 +6,12 @@ import ru.mtuci.rbpomtuci2024.Repository.LicenseRepository;
 import ru.mtuci.rbpomtuci2024.Repository.ProductRepository;
 import ru.mtuci.rbpomtuci2024.Repository.UserRepository;
 import ru.mtuci.rbpomtuci2024.Repository.LicenseTypeRepository;
-import ru.mtuci.rbpomtuci2024.model.ApplicationUser;
-import ru.mtuci.rbpomtuci2024.model.License;
-import ru.mtuci.rbpomtuci2024.model.Product;
-import ru.mtuci.rbpomtuci2024.model.LicenseType;
-import ru.mtuci.rbpomtuci2024.model.LicenseParameters;
-import ru.mtuci.rbpomtuci2024.model.LicenseResponseDTO;
+import ru.mtuci.rbpomtuci2024.service.ActivationException;
+import ru.mtuci.rbpomtuci2024.model.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -72,8 +69,7 @@ public class LicenseServiceImpl {
     }
 
     private Date calculateExpirationDate(Integer duration) {
-        // Реализация расчета даты окончания
-        return new Date(System.currentTimeMillis() + duration * 24 * 60 * 60 * 1000); // Длительность в днях
+        return new Date(System.currentTimeMillis() + duration * 24 * 60 * 60 * 1000L); // Длительность в днях
     }
 
     public License updateLicense(Long id, License updatedLicense) {
@@ -90,6 +86,37 @@ public class LicenseServiceImpl {
     }
 
     public void deleteLicense(Long id) {
-        licenseRepository.deleteById(id);
+        List<License> licenses = licenseRepository.findByProductId(id);
+        if (!licenses.isEmpty()) {
+            licenseRepository.deleteAll(licenses);
+        }
+        productRepository.deleteById(id);
+    }
+
+    public void deleteLicensesByProductId(Long productId) {
+        licenseRepository.deleteByProductId(productId);
+    }
+
+    public List<License> getLicensesByProductId(Long productId) {
+        return licenseRepository.findByProductId(productId);
+    }
+
+    public Optional<License> findLicenseByActivationCode(String activationCode) {
+        return licenseRepository.findByCode(activationCode);
+    }
+
+    public void validateActivation(License license, Device device, ApplicationUser user) {
+        if (license.isBlocked()) {
+            throw new ActivationException("License is blocked");
+        }
+        if (license.getEndingDate() != null && license.getEndingDate().before(new Date())) {
+            throw new ActivationException("License is expired");
+        }
+        // Дополнительные проверки здесь (если есть)
+    }
+
+    public void updateLicense(License license){
+        license.setActivated(true);
+        licenseRepository.save(license);
     }
 }

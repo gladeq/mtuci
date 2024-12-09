@@ -3,8 +3,12 @@ package ru.mtuci.rbpomtuci2024.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.mtuci.rbpomtuci2024.Repository.LicenseHistoryRepository;
+import ru.mtuci.rbpomtuci2024.model.ApplicationUser;
+import ru.mtuci.rbpomtuci2024.model.License;
 import ru.mtuci.rbpomtuci2024.model.LicenseHistory;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -38,5 +42,15 @@ public class LicenseHistoryServiceImpl {
 
     public void deleteLicenseHistory(Long id) {
         licenseHistoryRepository.deleteById(id);
+    }
+
+    public void recordLicenseChange(License license, ApplicationUser user, String status, String description) {
+        LicenseHistory history = new LicenseHistory();
+        history.setLicense(license);
+        history.setUser(user);
+        history.setStatus(status);
+        history.setDescription(description);
+        history.setChangeDate(new Date());
+        licenseHistoryRepository.save(history);
     }
 }

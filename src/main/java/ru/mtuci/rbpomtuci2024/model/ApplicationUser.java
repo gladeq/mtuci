@@ -14,6 +14,8 @@ import ru.mtuci.rbpomtuci2024.model.ApplicationRole;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApplicationUser {
+    @Setter
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,4 +25,5 @@ public class ApplicationUser {
 
     @Enumerated(EnumType.STRING)
     private ApplicationRole role;
+
 }

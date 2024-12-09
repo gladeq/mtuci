@@ -2,7 +2,9 @@ package ru.mtuci.rbpomtuci2024.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.mtuci.rbpomtuci2024.Repository.LicenseRepository;
 import ru.mtuci.rbpomtuci2024.Repository.ProductRepository;
+import ru.mtuci.rbpomtuci2024.model.License;
 import ru.mtuci.rbpomtuci2024.model.Product;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
 public class ProductServiceImpl {
 
     private final ProductRepository productRepository;
+    private final LicenseRepository licenseRepository;
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -34,6 +37,10 @@ public class ProductServiceImpl {
     }
 
     public void deleteProduct(Long id) {
+        List<License> licenses = licenseRepository.findByProductId(id);
+        if (!licenses.isEmpty()) {
+            licenseRepository.deleteAll(licenses);
+        }
         productRepository.deleteById(id);
     }
 }

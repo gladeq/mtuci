@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.mtuci.rbpomtuci2024.model.Device;
 import ru.mtuci.rbpomtuci2024.model.DeviceLicense;
+import ru.mtuci.rbpomtuci2024.model.License;
 import ru.mtuci.rbpomtuci2024.service.impl.DeviceLicenseServiceImpl;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/device-licenses")
@@ -27,9 +30,21 @@ public class DeviceLicenseController {
     }
 
     @PostMapping
-    public ResponseEntity<DeviceLicense> createDeviceLicense(@RequestBody DeviceLicense deviceLicense) {
+    public ResponseEntity<DeviceLicense> createDeviceLicense(@RequestBody Map<String, Long> request) {
+        Long licenseId = request.get("licenseId");
+        Long deviceId = request.get("deviceId");
+
+        // Ваша логика получения сущностей License и Device по их ID
+        // Замените этот код на свою реализацию получения License и Device
+        License license = new License();
+        license.setId(licenseId);
+
+        Device device = new Device();
+        device.setId(deviceId);
+
+        DeviceLicense createdDeviceLicense = deviceLicenseService.createDeviceLicense(license, device);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(deviceLicenseService.createDeviceLicense(deviceLicense));
+                .body(createdDeviceLicense);
     }
 
     @PutMapping("/{id}")
