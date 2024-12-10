@@ -29,21 +29,21 @@ public class LicenseServiceImpl {
 
     public License getLicenseById(Long id) {
         return licenseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("License not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Лицензия с id не найдена: " + id));
     }
 
     public License createLicense(Long productId, Long ownerId, Long licenseTypeId, LicenseParameters parameters) {
         // Получаем продукт по ID
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+                .orElseThrow(() -> new RuntimeException("Продукт с id не найден: " + productId));
 
         // Получаем пользователя по ID
         ApplicationUser owner = userRepository.findById(ownerId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + ownerId));
+                .orElseThrow(() -> new RuntimeException("Пользователь с id не найден: " + ownerId));
 
         // Получаем тип лицензии по ID
         LicenseType licenseType = licenseTypeRepository.findById(licenseTypeId)
-                .orElseThrow(() -> new RuntimeException("License type not found with id: " + licenseTypeId));
+                .orElseThrow(() -> new RuntimeException("Тип лицензии с id не найден: " + licenseTypeId));
 
         // Создаем новую лицензию
         License license = new License();
@@ -107,10 +107,10 @@ public class LicenseServiceImpl {
 
     public void validateActivation(License license, Device device, ApplicationUser user) {
         if (license.isBlocked()) {
-            throw new ActivationException("License is blocked");
+            throw new ActivationException("Лицензия заблокирована");
         }
         if (license.getEndingDate() != null && license.getEndingDate().before(new Date())) {
-            throw new ActivationException("License is expired");
+            throw new ActivationException("Срок действия лицензии истек");
         }
         // Дополнительные проверки здесь (если есть)
     }

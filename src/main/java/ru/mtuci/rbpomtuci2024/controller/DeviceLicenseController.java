@@ -34,8 +34,8 @@ public class DeviceLicenseController {
         Long licenseId = request.get("licenseId");
         Long deviceId = request.get("deviceId");
 
-        // Ваша логика получения сущностей License и Device по их ID
-        // Замените этот код на свою реализацию получения License и Device
+
+
         License license = new License();
         license.setId(licenseId);
 

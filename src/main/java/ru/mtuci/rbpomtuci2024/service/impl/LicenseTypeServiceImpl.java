@@ -22,13 +22,13 @@ public class LicenseTypeServiceImpl {
 
     public LicenseType getLicenseTypeById(Long id) {
         return licenseTypeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("LicenseType not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Тип лицензии не найден по id: " + id));
     }
 
     public LicenseType createLicenseType(LicenseType licenseType) {
         // Проверка уникальности ID
         if (licenseTypeRepository.existsById(licenseType.getId())) {
-            throw new IllegalArgumentException("License type with ID " + licenseType.getId() + " already exists");
+            throw new IllegalArgumentException("Тип лицензии с ID " + licenseType.getId() + " уже существует");
         }
         return licenseTypeRepository.save(licenseType);
     }

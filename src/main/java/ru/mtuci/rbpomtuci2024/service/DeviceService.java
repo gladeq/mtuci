@@ -27,7 +27,7 @@ public class DeviceService {
             device.setMacAddress(deviceId);
         }
 
-        device.setUser(user);  // Устанавливаем объект ApplicationUser в устройство
+        device.setUser(user);
 
         return deviceRepository.save(device);
     }

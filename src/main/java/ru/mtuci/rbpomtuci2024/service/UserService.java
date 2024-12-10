@@ -20,7 +20,7 @@ public class UserService {
         }
         ApplicationUser user = new ApplicationUser();
         user.setEmail(email);
-        // Generate default username using email
+
         user.setEmail(email.substring(0, email.indexOf('@')));
         return userRepository.save(user);
     }

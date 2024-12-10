@@ -64,7 +64,7 @@ public class ActivationController {
             licenseService.validateActivation(license, device, user);
             deviceLicenseService.createDeviceLicense(license, device);
             licenseService.updateLicense(license);
-            licenseHistoryService.recordLicenseChange(license, user, "Activated", "License Activated by user with email: " + email);
+            licenseHistoryService.recordLicenseChange(license, user, "Активирована", "Лицензия активируется пользователем по электронной почте: " + email);
 
             Long userId = user.getId();
             Ticket ticket = deviceLicenseService.generateTicket(license, device, userId);

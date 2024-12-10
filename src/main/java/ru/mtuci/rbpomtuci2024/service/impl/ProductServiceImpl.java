@@ -22,7 +22,7 @@ public class ProductServiceImpl {
 
     public Product getProductById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Продукт по id не найден: " + id));
     }
 
     public Product createProduct(Product product) {

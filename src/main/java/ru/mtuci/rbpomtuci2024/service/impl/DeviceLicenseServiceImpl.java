@@ -33,7 +33,7 @@ public class DeviceLicenseServiceImpl {
 
     public DeviceLicense getDeviceLicenseById(Long id) {
         return deviceLicenseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("DeviceLicense not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Лицензия устройства с id не найдена: " + id));
     }
 
     public DeviceLicense createDeviceLicense(License license, Device device) {
@@ -72,7 +72,7 @@ public class DeviceLicenseServiceImpl {
 
     private String generateDigitalSignature(Date serverDate, long lifetime, Date activationDate, Date expirationDate, Long userId, String deviceId, boolean licenseLocked) {
         if (secretKey == null || secretKey.isEmpty()) {
-            throw new IllegalStateException("Secret key is not set");
+            throw new IllegalStateException("Секретный ключ не установлен");
         }
 
         try {
@@ -85,7 +85,7 @@ public class DeviceLicenseServiceImpl {
 
             return Base64.getEncoder().encodeToString(hmacData);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to generate digital signature", e);
+            throw new RuntimeException("Не удалось сгенерировать цифровую подпись", e);
         }
     }
 

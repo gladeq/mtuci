@@ -37,7 +37,7 @@ public class AuthenticationController {
             String login = request.getEmail();
 
             ApplicationUser user = userRepository.findByEmail(login)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                    .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(login, request.getPassword())
@@ -48,7 +48,7 @@ public class AuthenticationController {
             return ResponseEntity.ok(new AuthenticationResponse(login, token));
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid email or password");
+                    .body("Неверный адрес электронной почты или пароль");
         }
     }
 
@@ -57,7 +57,7 @@ public class AuthenticationController {
     public ResponseEntity<?> register(@RequestBody AuthenticationRequest request) {
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email already exists");
+            return ResponseEntity.badRequest().body("Электронная почта уже существует");
         }
 
 
@@ -74,10 +74,10 @@ public class AuthenticationController {
             user = userRepository.save(user);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error during registration: " + e.getMessage());
+                    .body("Ошибка при регистрации: " + e.getMessage());
         }
 
 
-        return ResponseEntity.ok("User registration successful");
+        return ResponseEntity.ok("Успешная регистрация пользователя или администратора");
     }
 }

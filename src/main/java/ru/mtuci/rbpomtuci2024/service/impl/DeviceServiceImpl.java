@@ -19,7 +19,7 @@ public class DeviceServiceImpl {
 
     public Device getDeviceById(Long id) {
         return deviceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Device not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Устройство с id не найдено: " + id));
     }
 
     public Device createDevice(Device device) {
